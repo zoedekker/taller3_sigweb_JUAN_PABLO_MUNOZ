@@ -169,251 +169,244 @@ var mapabase2 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/service
 });
 
 // Subcapas individuales
-
-var rutas_correr = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
-    layers: 'taller3_sigweb:rutas_correr',
-    attribution: 'Juan Pablo Muñoz Acosta',
-    transparent: true,
-    format: 'image/png',
-});
-
-var predios = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var predios = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:predios',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var lug_int = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var lug_int = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:lugares_interes',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var acueductos = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var acueductos = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:acueductos_palmira',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var alcantarillado = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var alcantarillado = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:alcantarillado_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var lim_mun = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var lim_mun = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:palmira2',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var barrios = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var barrios = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: '	taller3_sigweb:barrios_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var cascos_urb = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var cascos_urb = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: '	taller3_sigweb:cascos_urb_palmira',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var area_expan = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var area_expan = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:ar_expan_urb_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var pozos = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var pozos = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:pozos_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var sistema_vial = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var sistema_vial = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:sistema_vial_palmira',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var ciclovia = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var ciclovia = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:sistema_vial_ciclovia_palmira',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var electrico = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var electrico = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:infraestructura_electrica_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var lin_acued = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var lin_acued = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:linea_acueducto_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var diques = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var diques = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:diques_bordas_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var frec_inund = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var frec_inund = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:frec_inunda_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var amen_inund = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var amen_inund = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:amenaza_inundacion_urbana_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var riesgo_inund = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var riesgo_inund = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:riesgo_de_inundacion_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var prot_incendios = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var prot_incendios = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:incendios_forestales_prio_protec_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var eventos = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var eventos = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:areas_y_sitios_con_riesgos_de_afectacion_por_eventos',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var red_hidrica = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var red_hidrica = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var cuerpos_agua = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var cuerpos_agua = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:taller3_sigweb:cuerpos_agua_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var humedales = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var humedales = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:taller3_sigweb:humedales_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var areas_prot_nal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var areas_prot_nal = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:areas_prot_nac_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var ecosistemas = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var ecosistemas = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:ecosistemas_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var biomas = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var biomas = L.tileLayer.wms('http://http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:biomas_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var edif_patri = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var edif_patri = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:edificaciones_patrimonio_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var patri_rur = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var patri_rur = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:patrimonio_rural_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var est_ec_pal_rur = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var est_ec_pal_rur = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:est_ec_pal_rur',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var est_ec_pr_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var est_ec_pr_pal = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:est_ec_pr_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var sue_de_pro_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var sue_de_pro_pal = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:sue_de_pro_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 ////////////////////////////////////
-var clasif_suelo_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var clasif_suelo_pal = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:clasificacion_suelo_pal',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var uso_pot_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var uso_pot_pal = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:suelo_uso_potencial_palmira',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var uso_pot_for_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var uso_pot_for_pal = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:uso_pot_zona_forestal_palm',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
 
-var geologia = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+var geologia = L.tileLayer.wms('http://18.232.208.186:8080/geoserver/wms', {
     layers: 'taller3_sigweb:palmira_geologia',
     attribution: 'Juan Pablo Muñoz Acosta',
     transparent: true,
     format: 'image/png',
 });
+
 
 // Control de Capas
 
