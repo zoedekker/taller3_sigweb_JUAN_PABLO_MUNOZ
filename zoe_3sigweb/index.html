@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.js"></script>  <!-- plugin jquery -->
+	
+	
+	
+	
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.css" />
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+	
+	
+	
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.js"></script>
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Leaflet.EasyButton/2.4.0/easy-button.css" />
+	
+	
+	
+	<script src="leaflet-heat.js"></script>
+	<title>Visor Geoserver</title>
+	
+	
+<style>
+    * { padding: 0; margin: 0; box-sizing: border-box; }
+    html, body { height: 100%; width: 100%; font-family: 'Poppins', sans-serif; }
+
+    /* Ajuste de mapa para no solaparse con la barra lateral */
+    #map { height: 100%; width: 100%; margin-right: 300px; }
+
+    /* Barra lateral */
+    .sidebar {
+        position: fixed;
+        top: 0;
+        right: 0;
+        height: 100%;
+        background-color: #f4f4f4;
+        box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+        padding: 10px;
+        overflow-y: scroll; /* Habilitar scroll solo en la barra lateral */
+        z-index: 1000;
+        width: 300px;
+        max-height: 100vh; /* Aseguramos que ocupe todo el alto de la pantalla */
+    }
+
+    /* Estilo del encabezado */
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px;
+        background-color: #333;
+        color: white;
+        z-index: 9999;
+        position: fixed;
+        width: 100%;
+        top: 0;
+    }
+
+    .menu-toggle {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 30px;
+        cursor: pointer;
+    }
+
+    /* Contenedor de controles del mapa */
+    .leaflet-control-layers {
+        background: transparent;
+        border: none;
+        padding: 0;
+        width: 100%;
+        max-height: calc(100% - 40px); /* Evitar que los controles de capas se desborden */
+    }
+
+    /* Contenedor para los controles en la barra lateral */
+    .sidebar-controls {
+        height: calc(100% - 50px); /* Ajusta según el tamaño del encabezado */
+        overflow-y: auto; /* Habilitar scroll */
+    }
+
+    /* Estilo uniforme para los botones dentro de la barra lateral */
+    .sidebar-btn {
+        width: 100%;
+        padding: 10px;
+        margin: 5px 0;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        cursor: pointer;
+    }
+
+    .sidebar-btn:hover {
+        background-color: #0056b3;
+    }
+	
+	/* Estilo uniforme para controles de capas */
+		.leaflet-control-layers {
+			width: 250px;
+			max-height: 400px; /* Tamaño máximo del control */
+			overflow-y: auto; /* Scroll si es necesario */
+		}
+
+		/* Estilo para los títulos de secciones */
+		.layer-group-title {
+			font-weight: bold;
+			text-align: center;
+			margin-top: 5px;
+			margin-bottom: 5px;
+			font-size: 14px;
+			background-color: #f0f0f0;
+			padding: 3px;
+			border-top: 1px solid #ccc;
+			border-bottom: 1px solid #ccc;
+		}
+
+        /* Ajuste de mapa para evitar que se solape con la barra */
+        #map { margin-right: 270px; }
+		
+/* Flecha Norte */
+        .north-arrow {
+            position: absolute;
+            top: 120px;
+            right: 360px;
+            z-index: 1000;
+            width: 50px;
+	
+</style>
+
+<!-- Barra lateral con contenedor para controles -->
+<div class="sidebar" id="sidebar">
+    <h2>Controles de Capas</h2>
+    <div class="sidebar-controls" id="mapaControles"></div>
+</div>
+	
+	<div class="header-container">
+		<h1>Visor de capas para el municipio de Palmira</h1>
+		<button class="menu-toggle" id="menuToggle">☰</button>
+	</div>
+
+	<!-- Barra lateral -->
+	<div class="sidebar" id="sidebar">
+		<h2>Controles de Capas</h2>
+		<div id="mapaControles"></div>
+	</div>
+
+	<!-- Mapa -->
+	<div id="map">
+<img src="norte.png" alt="Flecha Norte" class="north-arrow" />	</div>
+
+	<script>
+
+
+
+
+// Crear el mapa
+var map = L.map('map', { zoom: 10 }).setView([3.52335, -76.32086], 12);
+
+// Capas base
+var mapabase = L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 15,
+    attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+}).addTo(map);
+
+var mapabase2 = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', {
+    attribution: 'Tiles &copy; Esri &mdash; Source: Esri, USDA, USGS, AEX, GeoEye, IGN, IGP, UPR-EGP, and the GIS User Community'
+});
+
+// Subcapas individuales
+
+var rutas_correr = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:rutas_correr',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var predios = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:predios',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var lug_int = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:lugares_interes',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var acueductos = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:acueductos_palmira',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var alcantarillado = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:alcantarillado_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var lim_mun = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:palmira2',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var barrios = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: '	taller3_sigweb:barrios_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var cascos_urb = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: '	taller3_sigweb:cascos_urb_palmira',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var area_expan = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:ar_expan_urb_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var pozos = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:pozos_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var sistema_vial = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:sistema_vial_palmira',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var ciclovia = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:sistema_vial_ciclovia_palmira',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var electrico = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:infraestructura_electrica_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var lin_acued = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:linea_acueducto_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var diques = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:diques_bordas_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var frec_inund = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:frec_inunda_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var amen_inund = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:amenaza_inundacion_urbana_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var riesgo_inund = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:riesgo_de_inundacion_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var prot_incendios = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:incendios_forestales_prio_protec_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var eventos = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:areas_y_sitios_con_riesgos_de_afectacion_por_eventos',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var red_hidrica = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var cuerpos_agua = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:taller3_sigweb:cuerpos_agua_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var humedales = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:taller3_sigweb:humedales_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var areas_prot_nal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:areas_prot_nac_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var ecosistemas = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:ecosistemas_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var biomas = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:biomas_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var edif_patri = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:edificaciones_patrimonio_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var patri_rur = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:patrimonio_rural_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var est_ec_pal_rur = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:est_ec_pal_rur',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var est_ec_pr_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:est_ec_pr_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var sue_de_pro_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:sue_de_pro_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+////////////////////////////////////
+var clasif_suelo_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:clasificacion_suelo_pal',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var uso_pot_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:suelo_uso_potencial_palmira',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var uso_pot_for_pal = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:uso_pot_zona_forestal_palm',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+var geologia = L.tileLayer.wms('http://localhost:8080/geoserver/wms', {
+    layers: 'taller3_sigweb:palmira_geologia',
+    attribution: 'Juan Pablo Muñoz Acosta',
+    transparent: true,
+    format: 'image/png',
+});
+
+// Control de Capas
+
+var overlayMaps1 = {
+
+    "Rutas para correr": rutas_correr,
+	"Predios": predios,
+	"Lugares de interes": lug_int
+};
+
+var overlayMaps2 = {
+
+	"Acueductos Palmira": acueductos,
+	"Alcantarillado Palmira": alcantarillado
+};
+
+var overlayMaps3 = {
+
+	"Área de expansión Palmira":area_expan,
+	"Cascos Urbanos municipio":cascos_urb,
+	"Barrios Palmira": barrios,
+	"Perimetro Municipal": lim_mun
+};
+
+var overlayMaps4 = {
+
+	"Pozos":pozos,
+	"Sistema vial":sistema_vial,
+	"Sistema vial de ciclovias": ciclovia,
+	"Infraestructura electrica": electrico,
+	"Lineas de acueducto": lin_acued,
+	"Diques Y bordas":diques
+};
+
+var overlayMaps5 = {
+
+	"Frecuencia de inundaciones":frec_inund,
+	"Amenaza de Inundación Urbana":amen_inund,
+	"Riesgo por inundación": riesgo_inund,
+	"Prioridad de protección ante incendios naturales": prot_incendios,
+	"Áreas y sitios con riesgo de afectación por eventos": eventos
+};
+
+var overlayMaps6 = {
+
+	"Red hídrica":red_hidrica,
+	"Cuerpos de agua":cuerpos_agua,
+	"Humedales": humedales,
+	"Áreas de protección natural nacional": areas_prot_nal,
+	"Ecosistemas": ecosistemas,
+	"Biomas": biomas
+};
+
+var overlayMaps7 = {
+
+	"Edificaciones patrimonio":edif_patri,
+	"Patrimonio rural": patri_rur,
+	"Estructuras ecológicas principales rurales": est_ec_pal_rur,
+	"Estructuras ecológicas principales": est_ec_pr_pal,
+	"Suelos de protección": sue_de_pro_pal
+};
+
+var overlayMaps8 = {
+
+	"Estructura geológica Municipal":geologia,
+	"Uso potencial zona forestal": uso_pot_for_pal,
+	"Suelo uso potencial": uso_pot_pal,
+	"Clasificacion del suelo": clasif_suelo_pal
+};
+
+var baseMaps = {
+    "OpenStreetMap": mapabase,
+    "Imagen satelital": mapabase2,
+};
+
+// Primer control de capas: Capas base + overlays
+var mapas_base = L.control.layers(baseMaps, null, { collapsed: false  }).addTo(map);
+mapas_base._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+
+
+var limites_territoriales = L.control.layers(null, overlayMaps3, { collapsed: false  }).addTo(map);
+limites_territoriales._container.id = "mapaControles";
+
+var interes_usuario = L.control.layers(null, overlayMaps1,{ collapsed: false   }).addTo(map);
+interes_usuario._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+	
+var servicios_publicos = L.control.layers(null, overlayMaps2,{ collapsed: false   }).addTo(map);
+servicios_publicos._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+	
+var equipamientos = L.control.layers(null, overlayMaps4,{ collapsed: false   }).addTo(map);
+equipamientos._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+
+var gestion_riesgo = L.control.layers(null, overlayMaps5,{ collapsed: false  }).addTo(map);
+gestion_riesgo._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+
+var medio_ambiente = L.control.layers(null, overlayMaps6,{ collapsed: false  }).addTo(map);
+medio_ambiente._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+
+var patrimonio = L.control.layers(null, overlayMaps7,{ collapsed: false  }).addTo(map);
+patrimonio._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+
+var suelo = L.control.layers(null, overlayMaps8,{ collapsed: false }).addTo(map);
+suelo._container.id = "mapaControles"; // Asegurarse que se inserte en la barra lateral
+
+L.control.scale({position:'bottomleft'}).addTo(map);
+
+
+
+// Función para alternar la visibilidad de las capas
+function toggleLayer(layerName) {
+    var controlLayer = eval(layerName);
+    if (map.hasLayer(controlLayer)) {
+        map.removeLayer(controlLayer);
+    } else {
+        map.addLayer(controlLayer);
+    }        
+}
+
+// Control de capas con títulos
+function addLayerGroupTitle(container, title) {
+    var titleElement = document.createElement('div');
+    titleElement.className = 'layer-group-title';
+    titleElement.innerText = title;
+    container.appendChild(titleElement);
+}
+
+// Control de Capas con Títulos
+var containerBaseMaps = mapas_base._container;
+addLayerGroupTitle(containerBaseMaps, "Capas Base");
+
+var containerLimites = limites_territoriales._container;
+addLayerGroupTitle(containerLimites, "Límites Territoriales");
+
+var containerInteresUsuario = interes_usuario._container;
+addLayerGroupTitle(containerInteresUsuario, "Interés del Usuario");
+
+var containerServicios = servicios_publicos._container;
+addLayerGroupTitle(containerServicios, "Servicios Públicos");
+
+var containerEquipamientos = equipamientos._container;
+addLayerGroupTitle(containerEquipamientos, "Equipamientos");
+
+var containerRiesgo = gestion_riesgo._container;
+addLayerGroupTitle(containerRiesgo, "Gestión del Riesgo");
+
+var containerMedioAmbiente = medio_ambiente._container;
+addLayerGroupTitle(containerMedioAmbiente, "Medio Ambiente");
+
+var containerPatrimonio = patrimonio._container;
+addLayerGroupTitle(containerPatrimonio, "Patrimonio");
+
+var containerSuelo = suelo._container;
+addLayerGroupTitle(containerSuelo, "Uso del Suelo");
+
+
+L.control.scale({position:'bottomleft'}).addTo(map);
+
+	</script>
+</body>
+</html> 
+
